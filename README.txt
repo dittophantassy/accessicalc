@@ -1,0 +1,1 @@
+copy the sympy and flask libraries here, and use pyinstaller

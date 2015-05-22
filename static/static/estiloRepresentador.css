@@ -1,0 +1,35 @@
+* {
+	font-size: 2.5vmin;
+	font-family: "Arial";
+	text-transform: uppercase;
+	margin: 8px;
+}
+
+p{
+	margin:2em;
+}
+
+section {
+	border: 2px solid red;
+}
+
+.btn{
+	padding: 8px;
+}
+
+.btn:hover {
+	background-color:auto;
+	box-shadow: 0 0 5px black;
+
+}
+
+.inst {
+	font-weight: bold;
+	text-indent: 40px;
+	color: red;
+}
+
+.inputtext:focus {
+	background-color: #F0EEB9;
+}
+

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>accesicalc</title>
+		<meta charset="utf-8">
+		<script src="static/jquery-1.10.2.min.js"           type="text/javascript"></script>
+		<script src="static/jquery.flot.min.js"             type="text/javascript"></script>
+		<script src="static/representador.js"                 type="text/javascript"></script>
+		<script type="text/javascript">
+			$(window).scroll(function(e){ 
+				$el = $('#graph'); 
+				if ($(this).scrollTop() > $("#responses").offset().top){ 
+				  $('#graph').css({'position': 'fixed'}); 
+				} else{
+				  $('#graph').css({'position': 'static'}); 
+				}
+			      });
+		</script>
+		<link rel="stylesheet" type="text/css" href="static/estiloRepresentador.css">
+		
+	</head>
+	<body>
+		<h1><a href="/" >volver al menú principal</a></h1>
+			<!-- form para recorrer una funcion -->
+		<section id="recorrertab">
+			<form name="recorrer" id="recorrerform">
+				<label id="funcionLabel" for="funcion">Función a recorrer</label>
+				<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" id="recorrerinp" aria-required="true" />
+				<p>
+					Ingrese el rango de X para el cual desea recorrer la función.
+				</p>
+				<label id="desdeLabel" for="desde" >Valor X "desde"</label>
+				<input aria-labelledby="desdeLabel" type="number" step="any" class="inputtext" name="desde" value="-10" aria-required="true"/>
+				<label id="hastaLabel" for="hasta" >Valor X "hasta"</label>
+				<input aria-labelledby="hastaLabel" type="number" step="any" class="inputtext" name="hasta" value="10" aria-required="true"/>
+				<p>
+					Ingrese si desea un cambio entre valores de X.
+				</p>
+				<label id="pasoLabel" for="paso" >Cambio en X</label>
+				<input aria-labelledby="pasoLabel" type="number" step="any" class="inputtext" name="paso" value="1" aria-required="false"/>
+				<input type="button" value="Recorrer valores" id="recorrer" class="btn">
+				<div>
+				<br/>
+				<p>
+					Utilice esta herramienta para valuar la función en un punto. Ingrese el valor de X a valuar.
+				</p>
+				<label id="puntoLabel" for="punto">Valor de X a valuar</label>
+				<input aria-labelledby="puntoLabel" type="number" step="any" class="inputtext" name="punto" aria-required="false"/>
+				<input type="button" value="Valuar" id="valuar" class="btn">
+				</div>
+			</form>
+		</section>
+		<output aria-live="assertive" id="responses" style="width:45%;float:left"></output>
+		<output aria-hidden="true" title="gráfico de la función, para escucharlo utilice la herramienta audigráfico" id="graph" style="width:45%;float: right;right: 0px;top:0px;"></output>
+		<script type="text/javascript">document.getElementById("recorrerinp").focus();</script>
+	</body>
+</html>

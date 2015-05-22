@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>accesicalc</title>
+		<meta charset="utf-8">
+		<script src="static/jquery-1.10.2.min.js"           type="text/javascript"></script>
+		<script src="static/jquery.flot.min.js"             type="text/javascript"></script>
+		<script src="static/representador.js"                 type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="static/estiloRepresentador.css">
+	</head>
+	<body>
+		<h1><a href="/" >volver al menú principal</a></h1>
+		<!-- form para audigrafico -->
+		<section id="audiotab" >
+			<form name="audigrafico" id="audioform"  onsubmit="return false;">
+				<label id="funcionLabel" for="funcion" >Función a recorrer</label>
+				<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" aria-required="true" id="audioinp" required/>
+				<p>
+					Ingrese el rango de X para el cual desea escuchar el gráfico de la función.
+				</p>
+				<label id="desdeLabel" for="desde" >Valor X "desde"</label>
+				<input aria-labelledby="desdeLabel" type="number" step="any" class="inputtext" name="desde" value="-10" aria-required="true"/>
+				<label id="hastaLabel" for="hasta" >Valor X "hasta"</label>
+				<input aria-labelledby="hastaLabel" type="number" step="any" class="inputtext" name="hasta" value="10" aria-required="true"/>
+				<p>
+					El gráfico tarda aproximadamente 30 segundos en calcularse. Cuando esté listo, aparecerá un botón para reproducirlo
+				</p>
+				<input type="submit" value="Escuchar audigráfico" id="audio" class="btn"/>
+			</form>
+		</section>
+		<script type="text/javascript">document.getElementById("audioinp").focus();</script>
+	</body>
+</html>

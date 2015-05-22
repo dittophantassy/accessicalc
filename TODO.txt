@@ -1,0 +1,42 @@
+general:
+-las alertas las dice dos veces: "alerta","dos","dos" en firefox, y "dos", "alerta", "dos" en chrome
+-autocompletar nombres de funcion
+-usar headings (para los resultados, el formulario)
+
+analisis de funcion:
+-se tilda en ciertas raices
+-entrada:
+--aceptar ^ ademas de **
+--aceptar sen en vez de sin (no hay cotan)
+--aceptar ln en vez de log
+--ver como entrar logaritmos de varios tipos
+-salida:
+--dar el tipo de funcion
+--pasar los . a , para que los lea bien
+--leer los signos de puntuacion en voz alta
+
+
+navegar funcion:
+-flechitas izquierda y derecha: se mueve y te dice el valor
+-un campo para la cantidad de salto por flechita
+-un campo que te deje valuar la funcion en un cierto punto
+
+audigrafico:
+-dice los limites izquierdo y derecho, y los tonos mas altos y bajos
+-generar un tono de agudo a grave con los valores de desde y hasta
+-generarlo en el cliente o en el servidor:
+-cachear los ya generados
+--en el servidor:
+---pros:
+----seria mas facil de generar y sonaria mejor
+----andaría mejor en todos los browsers
+---cons:
+----tendria mas delay y gastaría más bandwith
+ 
+
+calculadora:
+-hacer foco en el input ni bien la abris
+-funciones estadisticas
+-traducir todo
+-añadir mejor navegación por historia
+-mejorar autocompletado
