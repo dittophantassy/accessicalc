@@ -134,7 +134,6 @@ function CommandLineEditor (params) {
 
   // define parameters
   var dom = {},
-      fullscreen = false,
       history = [],
       historyIndex = -1,
       parser = math.parser();
@@ -143,34 +142,6 @@ function CommandLineEditor (params) {
     // position the full screen button in the top right
     var top = 8;
     var right = (dom.topPanel.clientWidth - dom.results.clientWidth) + 6;
-    dom.fullscreen.style.top = top + 'px';
-    dom.fullscreen.style.right = right + 'px';
-  }
-
-  function toggleFullscreen() {
-    if (fullscreen) {
-      exitFullscreen();
-    }
-    else {
-      showFullscreen()
-    }
-  }
-
-  function showFullscreen() {
-    dom.frame.className = 'cle fullscreen';
-    document.body.style.overflow = 'hidden'; // (works only if body.style.height is defined)
-    fullscreen = true;
-    resize();
-    scrollDown();
-    dom.input.focus();
-  }
-
-  function exitFullscreen() {
-    dom.frame.className = 'cle';
-    document.body.style.overflow = '';
-    fullscreen = false;
-    resize();
-    scrollDown();
   }
 
   function scrollDown() {
@@ -179,6 +150,7 @@ function CommandLineEditor (params) {
 
   // Auto complete current input
   function autoComplete () {
+    var name;
     var text = dom.input.value;
     var end = /[a-zA-Z_0-9]+$/.exec(text);
     if (end) {
@@ -212,12 +184,14 @@ function CommandLineEditor (params) {
 
       // units
       var Unit = math.type.Unit;
-      Unit.UNITS.forEach(function (unit) {
-        if (unit.name.indexOf(keyword) == 0) {
-          matches.push(unit.name);
+      for (name in Unit.UNITS) {
+        if (Unit.UNITS.hasOwnProperty(name)) {
+          if (name.indexOf(keyword) == 0) {
+            matches.push(name);
+          }
         }
-      });
-      for (var name in Unit.PREFIXES) {
+      }
+      for (name in Unit.PREFIXES) {
         if (Unit.PREFIXES.hasOwnProperty(name)) {
           var prefixes = Unit.PREFIXES[name];
           for (var prefix in prefixes) {
@@ -227,13 +201,14 @@ function CommandLineEditor (params) {
               }
               else if (keyword.indexOf(prefix) == 0) {
                 var unitKeyword = keyword.substring(prefix.length);
-                Unit.UNITS.forEach(function (unit) {
-                  if (unit.name.indexOf(unitKeyword) == 0 &&
-                      Unit.isPlainUnit(prefix + unit.name)) {
-                    matches.push(prefix + unit.name);
-                  }
-                });
 
+                for (var n in Unit.UNITS) {
+                  if (Unit.UNITS.hasOwnProperty(n)) {
+                    if (n.indexOf(unitKeyword) == 0 && Unit.isValuelessUnit(prefix + n)) {
+                      matches.push(prefix + n);
+                    }
+                  }
+                }
               }
             }
           }
@@ -262,26 +237,19 @@ function CommandLineEditor (params) {
     var target = event.target || event.srcElement;
     var keynum = event.which || event.keyCode;
     if (keynum == 83) { // s
-      if (target != dom.input) {
+      if (target.nodeName.toUpperCase() != 'INPUT') {
         dom.input.focus();
         util.preventDefault(event);
         util.stopPropagation(event);
       }
     }
-    else if (keynum == 27) { // ESC
-      if (fullscreen) {
-        exitFullscreen();
+    else if (keynum == 71) { // g
+      if (target.nodeName.toUpperCase() != 'INPUT') {
+        var search = document.getElementById('gsc-i-id1');
+        if (search) search.focus();
         util.preventDefault(event);
         util.stopPropagation(event);
       }
-    }
-    else if (event.ctrlKey && keynum == 122) { // Ctrl+F11
-      toggleFullscreen();
-      if (fullscreen) {
-        dom.input.focus();
-      }
-      util.preventDefault(event);
-      util.stopPropagation(event);
     }
   }
 
@@ -368,14 +336,8 @@ function CommandLineEditor (params) {
     // create div to hold the results
     dom.results = document.createElement('div');
     dom.results.className = 'results';
+    dom.results.setAttribute("aria-live","assertive")
     dom.topPanel.appendChild(dom.results);
-
-    // create fullscreen button
-    dom.fullscreen = document.createElement('button');
-    dom.fullscreen.className = 'fullscreen';
-    dom.fullscreen.title = 'Toggle full screen display (Ctrl+F11)';
-    dom.fullscreen.onclick = toggleFullscreen;
-    dom.topPanel.appendChild(dom.fullscreen);
 
     // panels for the input field and button
     dom.inputLeft = document.createElement('div');
@@ -387,16 +349,17 @@ function CommandLineEditor (params) {
 
     dom.input = document.createElement('input');
     dom.input.className = 'input';
-    dom.input.title = 'Enter an expression';
+    dom.input.title = 'Ingresa una expresión matemática';
     dom.input.onkeydown = onKeyDown;
     dom.inputLeft.appendChild(dom.input);
-    dom.input.id="input"
-    
+
+    dom.input.focus()
+
     // create an eval button
     dom.btnEval = document.createElement('button');
-    dom.btnEval.appendChild(document.createTextNode('calcular'));
+    dom.btnEval.appendChild(document.createTextNode('Evaluar'));
     dom.btnEval.className = 'eval';
-    dom.btnEval.title = 'calcular la expression (Enter)';
+    dom.btnEval.title = 'Evaluar la expresión (Enter)';
     dom.btnEval.onclick = evalInput;
     dom.inputRight.appendChild(dom.btnEval);
 
@@ -432,9 +395,9 @@ function CommandLineEditor (params) {
   /**
    * Load saved expressions or example expressions
    */
-  function load() {
+  function load(id) {
     var expressions;
-    if (localStorage) {
+    if (true) {
       // load expressions from local storage
       var data = localStorage[id];
       if (data) {
@@ -444,12 +407,7 @@ function CommandLineEditor (params) {
     if (!expressions || !(expressions instanceof Array)) {
       // load some example expressions
       expressions = [
-        '1.2 / (2.3 + 0.7)',
-        'a = 5.08 cm + 1 inch',
-        'a in inch',
-        'sin(45 deg) ^ 2',
-        'function f(x, y) = x ^ y',
-        'f(2, 3)'
+       
       ];
     }
 
@@ -462,8 +420,8 @@ function CommandLineEditor (params) {
   /**
    * Save executed expressions
    */
-  function save() {
-    if (localStorage) {
+  function save(id) {
+    if (true) {
       localStorage[id] = JSON.stringify(history);
     }
   }
@@ -479,12 +437,96 @@ function CommandLineEditor (params) {
     // save(); // TODO: save expressions (first we need a method to restore the examples)
   }
 
+    function download(id){
+        var element = document.createElement('a');
+        var data = localStorage[id];
+        if (data) {
+            expressions = JSON.parse(data);
+        }
+        var text=""
+        expressions.forEach(function (expr) {
+            text+=expr
+            text+="\r\n"
+        });     
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', id+".txt");
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    function upload(id){
+        var fileInput = document.createElement('input');
+        fileInput.type = "file";
+        fileInput.addEventListener('change', function(e) {
+            var file = fileInput.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var text = e.target.result;
+                    var expressions = text.split(/[\n\r]/g);
+                    expressions.forEach(function (expr) {
+                        eval(expr);
+                    });
+                }
+            reader.readAsText(file);
+        });
+        document.body.appendChild(fileInput);
+        fileInput.focus();
+        fileInput.click();
+        document.body.removeChild(fileInput);
+
+    }
+
   function eval (expr) {
     expr = trim(expr);
-
-    if (expr == 'clear') {
-      clear();
-      return;
+    var parameters = expr.split(" ")
+    console.log(parameters)
+    if (parameters[0] == 'limpiar' || parameters[0] == 'borrar' ) {
+        clear();
+        return;
+    }
+    else if (parameters[0] == 'guardar'){
+        dom.input.value = '';
+        resize();
+        if (1 in parameters)    //if there is a second parameter
+            save(parameters[1]);
+        else
+            save('default');
+        return;
+    }
+    else if (parameters[0] == 'cargar'){
+        dom.input.value = '';
+        resize();
+        clear();
+        if (1 in parameters)    //if there is a second parameter
+            load(parameters[1]);
+        else
+            load('default');
+        return;
+    }
+    else if (parameters[0] == 'bajar'){
+        dom.input.value = '';
+        resize();
+        if (1 in parameters){    //if there is a second parameter
+            save(parameters[1])
+            download(parameters[1]);
+        }
+        else{
+            save('default')
+            download('default');
+        }
+        return;
+    }
+    else if (parameters[0] == 'subir'){
+        dom.input.value = '';
+        resize();
+        clear();
+        upload();
+        return;
     }
 
     if (expr) {
@@ -503,32 +545,33 @@ function CommandLineEditor (params) {
 
       var preExpr = document.createElement('pre');
       preExpr.className = 'expr';
+      preExpr.setAttribute("aria-live","off")
       preExpr.appendChild(document.createTextNode(expr));
       dom.results.appendChild(preExpr);
 
-      var preRes = document.createElement('pre');
+      var preRes = document.createElement('div');
       preRes.className = 'res';
-      //preRes.setAttribute("aria-busy","false")
-      preRes.setAttribute("role","log")
-      preRes.setAttribute("aria-live","assertive")
+      preRes.setAttribute("aria-busy","false")
+      //preRes.setAttribute("role","alert")
+      preRes.setAttribute("aria-live","rude")
       preRes.setAttribute("aria-atomic","false")
       preRes.setAttribute("aria-relevant","additions")
-      preRes.appendChild(document.createTextNode(filterOut(res)));
+      
+      preRes.appendChild(document.createTextNode(res));
       dom.results.appendChild(preRes);
-
+      
       scrollDown();
       dom.input.value = '';
 
       resize();
-      // save();  // TODO: save expressions (first we need a method to restore the examples)
+//      save();  // TODO: save expressions (first we need a method to restore the examples)
     }
   }
 
   function evalInput() {
-    eval(filterIn(dom.input.value));
+    eval(dom.input.value);
   }
 
   create();
   load();
-  document.getElementById("input").focus()
 }

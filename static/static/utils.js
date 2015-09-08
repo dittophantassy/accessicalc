@@ -22,4 +22,4 @@ function filterOut(s) {
     return s
 }
 
-console.log(filterOut("2+2^18"))
+//console.log(filterOut("2+2^18"))
