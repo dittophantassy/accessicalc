@@ -1,4 +1,3 @@
-//var math = mathjs();
 $(document).ready(function(){
     // create an instance of math.js
     var editor = new CommandLineEditor({
