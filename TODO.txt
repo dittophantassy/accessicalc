@@ -1,3 +1,23 @@
+traducir
+
+infinity
+mensajes de error (falta una coma, etc)
+ayuda y errores de cada funcion
+
+
+catch division por cero en audiografico
+saltar mejor error de validacion de javascript (mas lindo/grande)
+mostrar errores audigrafico (como en )
+
+
+
+
+
+
+
+
+
+
 general:
 -las alertas las dice dos veces: "alerta","dos","dos" en firefox, y "dos", "alerta", "dos" en chrome
 -autocompletar nombres de funcion

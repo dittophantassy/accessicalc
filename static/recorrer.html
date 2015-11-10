@@ -19,38 +19,39 @@
 		<link rel="stylesheet" type="text/css" href="static/estiloRepresentador.css">
 		
 	</head>
-	<body>
+	<body id="narrow">
 		<h1><a href="/" >volver al menú principal</a></h1>
 			<!-- form para recorrer una funcion -->
 		<section id="recorrertab">
 			<form name="recorrer" id="recorrerform">
-				<label id="funcionLabel" for="funcion">Función a recorrer</label>
-				<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" id="recorrerinp" aria-required="true" />
+				<p>
+					Valuar la función en una serie de puntos con un intervalo constante. La función debe tomar X como parámetro.
+				</p>
+					<label id="funcionLabel" for="funcion">Función a recorrer</label>
+					<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" id="recorrerinp" aria-required="true" />
 				<p>
 					Ingrese el rango de X para el cual desea recorrer la función.
 				</p>
-				<label id="desdeLabel" for="desde" >Valor X "desde"</label>
-				<input aria-labelledby="desdeLabel" type="number" step="any" class="inputtext" name="desde" value="-10" aria-required="true"/>
-				<label id="hastaLabel" for="hasta" >Valor X "hasta"</label>
-				<input aria-labelledby="hastaLabel" type="number" step="any" class="inputtext" name="hasta" value="10" aria-required="true"/>
+					<label id="desdeLabel" for="desde" >Valor X "desde"</label>
+					<input aria-labelledby="desdeLabel" type="number" step="any" class="inputtext" name="desde" value="-10" aria-required="true"/>
+					<br/>
+					<label id="hastaLabel" for="hasta" >Valor X "hasta"</label>
+					<input aria-labelledby="hastaLabel" type="number" step="any" class="inputtext" name="hasta" value="10" aria-required="true"/>
 				<p>
-					Ingrese si desea un cambio entre valores de X.
+					Ingrese el intervalo entre los valores de X.
 				</p>
 				<label id="pasoLabel" for="paso" >Cambio en X</label>
 				<input aria-labelledby="pasoLabel" type="number" step="any" class="inputtext" name="paso" value="1" aria-required="false"/>
 				<input type="button" value="Recorrer valores" id="recorrer" class="btn">
-				<div>
-				<br/>
 				<p>
-					Utilice esta herramienta para valuar la función en un punto. Ingrese el valor de X a valuar.
+					Valuar la función en un punto. Ingrese el valor de X a valuar.
 				</p>
 				<label id="puntoLabel" for="punto">Valor de X a valuar</label>
-				<input aria-labelledby="puntoLabel" type="number" step="any" class="inputtext" name="punto" aria-required="false"/>
+				<input aria-labelledby="puntoLabel" type="number" step="any" class="inputtext" name="punto" value="0" aria-required="false"/>&nbsp;
 				<input type="button" value="Valuar" id="valuar" class="btn">
-				</div>
 			</form>
 		</section>
-		<output aria-live="assertive" id="responses" style="width:45%;float:left"></output>
+		<output aria-live="assertive" id="responses" style="width:45%;float:left;"></output>
 		<output aria-hidden="true" title="gráfico de la función, para escucharlo utilice la herramienta audigráfico" id="graph" style="width:45%;float: right;right: 0px;top:0px;"></output>
 		<script type="text/javascript">document.getElementById("recorrerinp").focus();</script>
 	</body>

@@ -8,13 +8,16 @@
 		<script src="static/representador.js"                 type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="static/estiloRepresentador.css">
 	</head>
-	<body>
+	<body id="narrow">
 		<h1><a href="/" >volver al menú principal</a></h1>
 			<!-- form para analisis de funcion -->
 			<section id="analisistab">
 				<form name="analisis" id="analisisform" onsubmit="return false;">
-					<label id="funcionLabel" for="funcion">Función a evaluar</label>
-					<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" id="analisisinp" aria-required="true" required/>
+					<p>
+						Ingrese la función a analizar. La función debe tomar X como parámetro.
+					</p>
+					<label id="funcionLabel" for="funcion">Función a analizar</label>
+					<input aria-labelledby="funcionLabel" type="text" class="inputtext" name="funcion" id="analisisinp" aria-required="true"/>
 					<input type="submit" value="Realizar análisis" id="analisis" class="btn">
 				</form>
 			</section>

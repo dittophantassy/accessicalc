@@ -13,15 +13,19 @@ function submit(form, url) {
 			var el = document.getElementById('responses');
 			el.innerHTML = "<p>" + data.results.join("</p><p>") + "</p>";
 			el.tabIndex=1;
+			el.style.borderWidth="2px"
+			el.style.borderColor="blue"
+			el.style.borderStyle="solid"
+			el.style.float="left"
+
 			el.setAttribute("aria-selected","true");
 		        el.focus();
 		}
 	});
 
 }
-var numAudios=3;
-var currentAudios=0
-var audios={};
+var audios = {};
+var playing = false
 
 $(document).ready(function() {
 	$('#analisis').click(function(e) {
@@ -53,6 +57,9 @@ $(document).ready(function() {
 
 				$.plot($("#flotSpace"), [data.results], options);
 			}
+			else{
+				$("#flotSpace").empty()
+			}
 		});
 
 	});
@@ -62,8 +69,31 @@ $(document).ready(function() {
 	
 	$('#audio').click(function(e) {
 		var params=$("#audioform").serialize()
+		if (!audios[params] && window.localStorage){
+			console.log("doesn't exist and has localStorage")
+			if (localStorage.getItem(params))
+			{
+				console.log("its in localStorage")
+				audios[params] = new Audio("data:audio/wav;base64," + localStorage.getItem(params))
+				audios[params].load();
+			}
+		}
+
 		if (audios[params]) {
-			audios[params].play();
+			console.log("its in array")
+			if (!audios[params].ended && !audios[params].paused && playing){
+				console.log("parar")
+				audios[params].pause()//no existe stop
+				playing = false
+				audios[params].currentTime = 0
+				$('#audio').val("reproducir")
+			}
+			else{
+				console.log("reproducir preexistente")
+				audios[params].play();
+				playing = true
+				$('#audio').val("parar")
+			}
 		} else{
 		$.ajax({
 			type : "GET",
@@ -77,11 +107,62 @@ $(document).ready(function() {
 
 				var el = document.getElementById('responses');
 				if (data.results[1] && data.results[1].audio) {
+					el.innerHTML = "";
 					audios[params] = new Audio("data:audio/wav;base64," + data.results[1].audio);
+					audios[params].load();
 					audios[params].play();
+					playing = true
+					console.log("reproducir nuevo")
+					console.log(audios[params])
+					
+					$("#audio").val("parar")
+
+					audios[params].addEventListener("ended",function(e){
+						$("#audio").val("reproducir")
+						playing = false
+					})
+
+					if (window.localStorage){
+						localStorage.setItem(params,data.results[1].audio)
+					}
+					
 				}
+				else{
+					var el = document.getElementById('responses');
+					el.innerHTML = "<p>" + data.results.join("</p><p>") + "</p>";
+					el.tabIndex=1;
+					el.setAttribute("aria-selected","true");
+		       		el.focus();
+				} 
+
 			}
 		});
 		}
 	});
+	
+	//controles de estilo
+
+    $(document.body).addClass(localStorage.getItem("style"))
+	$("[type=checkbox]").each(
+		function(){
+			if ($(document.body).hasClass($(this).attr("id"))){
+				$(this).prop('checked', true);
+			}
+
+			$(this).click(function() {
+		        if($(this).is(":checked")) {
+					$(document.body).addClass($(this).attr("id"))
+					localStorage.setItem("style",$(document.body).attr('class'))
+		        }
+		        else{
+		        	$(document.body).removeClass($(this).attr("id"))
+		        	localStorage.setItem("style",$(document.body).attr('class'))
+		        }
+		    })
+		}
+	)
+
+
 });
+
+

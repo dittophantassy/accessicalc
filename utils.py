@@ -5,7 +5,7 @@ import sympy
 from sympy.parsing.sympy_parser import parse_expr
 
 
-def filterOut(out,decimals=10):
+def filterOut(out,decimals=6):
     #TODO E,constants (pi,e), localization
     #TODO tokenize this
     # s=unicode(out)
@@ -49,15 +49,19 @@ def processRequest(request):
     res={}
     res["x"]=sympy.Symbol('x', real=True)
     
+    if not funcion:
+        res["error"]=u"<h2>No ha ingresado una función.</h2>"
+        return res
+
     try:
         res["f"]=parse_expr(funcion,{'x':res["x"]})
     except SyntaxError,error:
-        res["error"]=u"<h2>La funcion no es válida: "+funcion+"</h2>"
+        res["error"]=u"<h2>La función no es válida: "+funcion+"</h2>"
         return res
     
     try:
         sympy.solve(res["f"], res["x"])
-    except NotImplementedError:
+    except (NotImplementedError,TypeError):
         res["error"]=u"<h2>No existe la función: "+funcion+u"</h2>"
         return res
     
@@ -86,7 +90,7 @@ def processRequest(request):
         if res["pas"]<=0:
             res["error"]=u"<h2>Paso menor o igual que cero: " + paso + "</h2>"
             return res
-        
+
     if punto:
         try:
             res["pun"]=float(punto)
