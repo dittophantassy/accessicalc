@@ -1,0 +1,7 @@
+Accessikit
+
+Este kit se compone de dos partes principales:
+
+Accessicalc: Servidor de cálculo, se lanza desde el menú inicio.
+
+Tabla periódica: Página web, se puede acceder directamente desde el menú inicio.
