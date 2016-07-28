@@ -19,7 +19,7 @@ function submit(form, url) {
 			el.style.float="left"
 
 			el.setAttribute("aria-selected","true");
-		        el.focus();
+	        el.focus();
 		}
 	});
 
@@ -69,6 +69,10 @@ $(document).ready(function() {
 	
 	$('#audio').click(function(e) {
 		var params=$("#audioform").serialize()
+		var el = document.getElementById('responses');
+		el.innerHTML = "";
+		el.style.borderStyle="none";
+
 		if (!audios[params] && window.localStorage){
 			console.log("doesn't exist and has localStorage")
 			if (localStorage.getItem(params))
@@ -132,9 +136,12 @@ $(document).ready(function() {
 					el.innerHTML = "<p>" + data.results.join("</p><p>") + "</p>";
 					el.tabIndex=1;
 					el.setAttribute("aria-selected","true");
+					el.style.borderWidth="2px"
+					el.style.borderColor="blue"
+					el.style.borderStyle="solid"
+					el.style.float = "left"
 		       		el.focus();
 				} 
-
 			}
 		});
 		}
